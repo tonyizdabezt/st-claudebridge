@@ -1,0 +1,10 @@
+{
+    "display_name": "ClaudeBridge",
+    "loading_order": 100,
+    "requires": [],
+    "optional": [],
+    "js": "ui/index.js",
+    "css": "ui/style.css",
+    "author": "tonyizdabezt",
+    "version": "1.0.0"
+}

@@ -1,0 +1,50 @@
+.claude-bridge-settings .inline-drawer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.claude-bridge-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+#claude_bridge_status.ok {
+    color: var(--active, #4caf50);
+}
+
+#claude_bridge_status.error {
+    color: var(--warning, #e57373);
+    word-break: break-word;
+}
+
+.claude-bridge-connect-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.claude-bridge-quota-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.9em;
+}
+
+.claude-bridge-quota-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--black30a, rgba(0, 0, 0, 0.3));
+    overflow: hidden;
+}
+
+.claude-bridge-quota-bar > div {
+    height: 100%;
+    background: var(--SmartThemeQuoteColor, #e18a24);
+}
+
+.claude-bridge-notice {
+    opacity: 0.8;
+}
