@@ -14,7 +14,7 @@
             <div class="claude-bridge-connect-row">
                 <div id="claude_bridge_connect_claude" class="menu_button menu_button_icon" title="Claude source + reverse proxy preset. Uses SillyTavern's own Claude settings (model list, thinking, effort).">
                     <i class="fa-solid fa-plug"></i>
-                    <span>Connect (Claude source)</span>
+                    <span>Connect (Claude)</span>
                 </div>
                 <div id="claude_bridge_connect_custom" class="menu_button menu_button_icon" title="Custom (OpenAI-compatible) source. Live model list from Claude Code, including 1M-context variants; uses the settings below.">
                     <i class="fa-solid fa-plug-circle-plus"></i>
@@ -24,7 +24,7 @@
             <small class="claude-bridge-notice">
                 Claude source: pick any model in the Claude list; requests use the standard context window.
                 For 1M-context Opus 4.6 / Sonnet 4.6, use Custom.
-                The Claude source keeps the "ClaudeBridge" proxy preset; set the preset to None before switching to other APIs.
+                The Claude source keeps the "ClaudeBridge" proxy preset. You might need to switch it to "None" when switching to another API.
             </small>
             <small class="claude-bridge-notice">Settings below apply to Custom. Claude source requests use SillyTavern's own reasoning settings; these fill in anything it doesn't send.</small>
 
@@ -59,9 +59,8 @@
             </label>
 
             <small class="claude-bridge-notice">
-                Uses your own Claude Code login (<code>claude /login</code>); usage counts against your Pro/Max plan limits,
+                Uses your own Claude Code login (<code>claude /login</code>); usage counts against your plan usage limits,
                 shared with Claude Code and claude.ai.
-                Temperature, Top P/K and penalties are ignored. Stop strings are emulated. Assistant prefill and the "Continue prefill" option are not supported; Continue itself works.
             </small>
         </div>
     </div>
