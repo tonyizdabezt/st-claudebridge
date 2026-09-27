@@ -116,7 +116,7 @@ async function connectCustom() {
 
 jQuery(async () => {
     const html = await renderExtensionTemplateAsync(TEMPLATE_PATH, 'settings');
-    $('#extensions_settings2').append(html);
+    $('#extensions_settings').append(html);
 
     $('#claude_bridge_refresh').on('click', () => refreshStatus(true));
     $('#claude_bridge_connect_claude').on('click', connectClaude);
