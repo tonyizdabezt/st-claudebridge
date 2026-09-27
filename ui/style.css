@@ -1,4 +1,4 @@
-.claude-bridge-settings .inline-drawer-content {
+.claude-bridge-body {
     display: flex;
     flex-direction: column;
     gap: 6px;
