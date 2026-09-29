@@ -60,6 +60,8 @@ Claude Code adds your account email to the newest user message, and the working 
 
 The plugin points the CLI (via `ANTHROPIC_BASE_URL`) at a local proxy on a random `127.0.0.1` port. The proxy drops those from `POST /v1/messages` bodies and forwards everything else unchanged to `api.anthropic.com`, including headers, auth and the system prompt.
 
+Each chat session is created with a fixed title, so the CLI skips the extra model call it would otherwise make to name the session.
+
 ## Limitations
 
 - Temperature, Top P/K and penalties are ignored.
