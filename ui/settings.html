@@ -58,6 +58,14 @@
                 <input id="claude_bridge_resume" type="checkbox">
                 <span>Send history as real turns</span>
             </label>
+            <label class="checkbox_label" for="claude_bridge_strip_sdk_identity">
+                <input id="claude_bridge_strip_sdk_identity" type="checkbox">
+                <span>Remove the Agent SDK identity line</span>
+            </label>
+            <small class="claude-bridge-notice">
+                Removes the short intro line the Agent SDK adds to the top of the system prompt.
+                Usage still comes out of your plan. If requests start failing, turn this off.
+            </small>
 
             <small class="claude-bridge-notice">
                 Uses your own Claude Code login (<code>claude /login</code>); usage counts against your plan usage limits,

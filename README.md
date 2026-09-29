@@ -52,13 +52,15 @@ Update both together so the panel and plugin stay in sync.
 `config.json` is created in the plugin folder on first run and is gitignored.
 
 - `port` (default `7373`) and `secret` (the API key SillyTavern uses) can only be edited there.
-- Effort, thinking, thinking budget, reasoning display and history mode can also be changed from the panel.
+- Effort, thinking, thinking budget, reasoning display, history mode and SDK identity stripping can also be changed from the panel.
 
 ## Host metadata stripping
 
 Claude Code adds your account email to the newest user message, and the working directory, OS and shell, the model's identity and today's date as a `system`-role message.
 
 The plugin points the CLI (via `ANTHROPIC_BASE_URL`) at a local proxy on a random `127.0.0.1` port. The proxy drops those from `POST /v1/messages` bodies and forwards everything else unchanged to `api.anthropic.com`, including headers, auth and the system prompt.
+
+The Agent SDK also puts `You are a Claude agent, built on Anthropic's Claude Agent SDK.` at the top of the system prompt. The proxy keeps it by default. Turning on `stripSdkIdentity` (**Remove the Agent SDK identity line** in the panel) drops it too. Requests still count against your plan, but Anthropic could start rejecting requests without it.
 
 Each chat session is created with a fixed title, so the CLI skips the extra model call it would otherwise make to name the session.
 

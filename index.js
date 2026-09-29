@@ -31,14 +31,14 @@ export const info = {
 export async function init(router) {
     fs.mkdirSync(cwd, { recursive: true });
     config = new ConfigStore(path.join(pluginDir, 'config.json'));
-    upstream = await startUpstreamProxy();
+    upstream = await startUpstreamProxy(() => config.data);
 
     server = createServer({ getConfig: () => config.data, cwd, active });
     await new Promise((resolve, reject) => {
         server.once('error', reject);
         server.listen(config.data.port, HOST, () => resolve(undefined));
     });
-    console.info(`[claude-bridge] Listening on http://${HOST}:${config.data.port}/v1 (Anthropic /messages and OpenAI /chat/completions)`);
+    console.info(`[claude-bridge] Listening on http://${HOST}:${config.data.port}/v1`);
 
     router.get('/status', async (req, res) => {
         const base = { ...sdkVersions(), cliPath: bundledCliPath(), endpoint: `http://${HOST}:${config.data.port}/v1` };
