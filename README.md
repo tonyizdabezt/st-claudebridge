@@ -2,6 +2,11 @@
 
 A SillyTavern server plugin plus UI panel that sends chats through the Claude Agent SDK using your own Claude Code login (Pro/Max plan). It serves an Anthropic-style `/v1/messages` endpoint and an OpenAI-style `/v1/chat/completions` endpoint on `127.0.0.1`.
 
+> [!WARNING]
+> ClaudeBridge is an unofficial community project. Anthropic doesn't make, endorse or support it. "Claude" is a trademark of Anthropic, PBC, and this project uses the name only to say what it connects to.
+>
+> Anthropic's terms may not cover using a Pro/Max subscription through third-party tools like this one, and Anthropic can limit or suspend accounts that don't follow them. Read the [Consumer Terms](https://www.anthropic.com/legal/consumer-terms) and [Usage Policy](https://www.anthropic.com/legal/aup) before you install it. Use it at your own risk.
+
 ## Layout
 
 The same repo is installed twice, once in each role:
@@ -31,7 +36,7 @@ The same repo is installed twice, once in each role:
 
 4. Restart SillyTavern. The console should print `[claude-bridge] Listening on http://127.0.0.1:7373/v1`.
 5. Open the **ClaudeBridge** drawer in the Extensions panel. If it says "Not logged in", run the CLI path it shows and use `/login`.
-6. Click **Connect (Claude source)** or **Connect (Custom)**, then pick a model.
+6. Click **Connect (Claude)** or **Connect (Custom)**, then pick a model.
 
 ## Updating
 
@@ -54,15 +59,13 @@ Update both together so the panel and plugin stay in sync.
 - `port` (default `7373`) and `secret` (the API key SillyTavern uses) can only be edited there.
 - Effort, thinking, thinking budget, reasoning display, history mode and SDK identity stripping can also be changed from the panel.
 
-## Host metadata stripping
+## Prompt cleanup
 
-Claude Code adds your account email to the newest user message, and the working directory, OS and shell, the model's identity and today's date as a `system`-role message.
+Claude Code adds coding-session details to each request: your account email on the newest user message, and the working directory, OS, shell, model identity and date in a `system`-role message. None of that helps a roleplay chat, and it takes up context.
 
-The plugin points the CLI (via `ANTHROPIC_BASE_URL`) at a local proxy on a random `127.0.0.1` port. The proxy drops those from `POST /v1/messages` bodies and forwards everything else unchanged to `api.anthropic.com`, including headers, auth and the system prompt.
+The plugin points the CLI (via `ANTHROPIC_BASE_URL`) at a local proxy on a random `127.0.0.1` port. The proxy removes those details from `POST /v1/messages` bodies and forwards the rest to `api.anthropic.com` as is, including headers, auth and the system prompt.
 
-The Agent SDK also puts `You are a Claude agent, built on Anthropic's Claude Agent SDK.` at the top of the system prompt. The proxy keeps it by default. Turning on `stripSdkIdentity` (**Remove the Agent SDK identity line** in the panel) drops it too. Requests still count against your plan, but Anthropic could start rejecting requests without it.
-
-Each chat session is created with a fixed title, so the CLI skips the extra model call it would otherwise make to name the session.
+The Agent SDK also opens the system prompt with `You are a Claude agent, built on Anthropic's Claude Agent SDK.` The proxy leaves that line in by default. You can remove it with `stripSdkIdentity` (**Remove the Agent SDK identity line** in the panel). This is optional and Anthropic may reject requests that lack the line.
 
 ## Limitations
 
