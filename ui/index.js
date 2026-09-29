@@ -1,7 +1,8 @@
-import { renderExtensionTemplateAsync } from '../../../../extensions.js';
+import { renderExtensionTemplateAsync, getContext } from '../../../../extensions.js';
 import { getRequestHeaders } from '../../../../../script.js';
 import { eventSource, event_types } from '../../../../events.js';
 import { SECRET_KEYS, secret_state, writeSecret, deleteSecret, readSecretState } from '../../../../secrets.js';
+import { openInsights } from './insights.js';
 
 const API = '/api/plugins/claude-bridge';
 const SECRET_LABEL = 'ClaudeBridge plugin';
@@ -63,7 +64,11 @@ async function refreshStatus(force = false) {
     }
 }
 
+let endpoint = null;
+const trimSlash = url => String(url ?? '').replace(/\/+$/, '');
+
 function renderConfig(config) {
+    if (config.endpoint) endpoint = trimSlash(config.endpoint);
     $('#claude_bridge_effort').val(config.effort);
     $('#claude_bridge_thinking').val(config.thinking);
     $('#claude_bridge_budget').val(config.thinkingBudget);
@@ -118,9 +123,31 @@ async function connectCustom() {
     }
 }
 
+async function tagGeneration(data) {
+    if (!endpoint || ![data?.reverse_proxy, data?.custom_url].some(url => trimSlash(url) === endpoint)) return;
+    const context = getContext();
+    const group = context.groupId ? context.groups.find(g => g.id == context.groupId) : null;
+    const char = group ? group.name : context.characters[context.characterId]?.name;
+    try {
+        await api('/tag', { method: 'POST', body: JSON.stringify({ chat: context.chatId, char }) });
+    } catch {
+    }
+}
+
+function showInsights() {
+    openInsights({ api, templatePath: TEMPLATE_PATH }).catch(error => toastr.error(error.message, 'ClaudeBridge'));
+}
+
 jQuery(async () => {
     const html = await renderExtensionTemplateAsync(TEMPLATE_PATH, 'settings');
     $('#extensions_settings').append(html);
+
+    $('#extensionsMenu').append(`
+        <div id="claude_bridge_wand" class="list-group-item flex-container flexGap5" title="ClaudeBridge usage over time">
+            <div class="fa-solid fa-chart-simple extensionsMenuExtensionButton"></div>
+            <span>Usage Insights</span>
+        </div>`);
+    $('#claude_bridge_wand, #claude_bridge_insights').on('click', showInsights);
 
     $('#claude_bridge_refresh').on('click', () => refreshStatus(true));
     $('#claude_bridge_connect_claude').on('click', connectClaude);
@@ -134,5 +161,6 @@ jQuery(async () => {
     } catch {
     }
     eventSource.on(event_types.GENERATION_ENDED, () => showNotices().catch(() => {}));
+    eventSource.on(event_types.CHAT_COMPLETION_SETTINGS_READY, tagGeneration);
     await refreshStatus();
 });

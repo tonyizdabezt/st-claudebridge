@@ -4,9 +4,10 @@ import { fileURLToPath } from 'node:url';
 import { ConfigStore } from './lib/config.js';
 import { createServer } from './lib/server.js';
 import { probe, sdkVersions, bundledCliPath } from './lib/sdk.js';
-import { startUpstreamProxy } from './lib/upstream.js';
+import { startUpstreamProxy, countTokens } from './lib/upstream.js';
 import { sweepResumeDirs } from './lib/session.js';
 import { recentNotices } from './lib/notices.js';
+import { UsageLog } from './lib/usage.js';
 
 const HOST = '127.0.0.1';
 const pluginDir = path.dirname(fileURLToPath(import.meta.url));
@@ -15,6 +16,8 @@ const cwd = path.join(pluginDir, '.scratch-cwd');
 
 /** @type {ConfigStore} */
 let config;
+/** @type {UsageLog} */
+let usage;
 /** @type {import('node:http').Server | null} */
 let server = null;
 /** @type {import('node:http').Server | null} */
@@ -36,7 +39,8 @@ export async function init(router) {
     config = new ConfigStore(path.join(pluginDir, 'config.json'));
     upstream = await startUpstreamProxy(() => config.data);
 
-    server = createServer({ getConfig: () => config.data, cwd, active });
+    usage = new UsageLog(path.join(pluginDir, 'usage.jsonl'), countTokens);
+    server = createServer({ getConfig: () => config.data, cwd, active, usage });
     await new Promise((resolve, reject) => {
         server.once('error', reject);
         server.listen(config.data.port, HOST, () => resolve(undefined));
@@ -56,6 +60,15 @@ export async function init(router) {
 
     router.get('/notices', (_req, res) => {
         res.json(recentNotices());
+    });
+
+    router.get('/usage', (req, res) => {
+        res.json(usage.summary({ range: String(req.query.range ?? ''), tz: Number(req.query.tz) }));
+    });
+
+    router.post('/tag', (req, res) => {
+        usage.tag(req.body);
+        res.json({ ok: true });
     });
 
     router.get('/config', (_req, res) => {

@@ -1,3 +1,4 @@
 node_modules/
 config.json
 .scratch-cwd/
+usage.jsonl

@@ -1,0 +1,141 @@
+<div class="cbi" data-state="loading">
+    <header class="cbi-head">
+        <h3 class="cbi-title">Usage Insights</h3>
+        <div class="cbi-range" role="group" aria-label="Time range">
+            <button type="button" data-range="24h">24h</button>
+            <button type="button" data-range="7d">7 days</button>
+            <button type="button" data-range="30d">30 days</button>
+            <button type="button" data-range="90d">90 days</button>
+            <button type="button" data-range="all">All time</button>
+        </div>
+    </header>
+
+    <div class="cbi-message">
+        <p class="cbi-message-title"></p>
+        <p class="cbi-message-body"></p>
+        <button type="button" class="menu_button cbi-retry" hidden>Try again</button>
+    </div>
+
+    <div class="cbi-body">
+        <section class="cbi-hero">
+            <div class="cbi-hero-figure">
+                <div class="cbi-hero-value" data-field="cost">$0.00</div>
+                <div class="cbi-hero-label">API-equivalent value, <span data-field="rangeLabel"></span></div>
+                <div class="cbi-hero-note" data-field="costNote"></div>
+            </div>
+            <div class="cbi-chart" data-chart="cost"></div>
+        </section>
+
+        <dl class="cbi-strip">
+            <div class="cbi-stat">
+                <dt>Messages</dt>
+                <dd><span class="cbi-stat-value" data-field="messages"></span><span class="cbi-delta" data-delta="messages"></span></dd>
+            </div>
+            <div class="cbi-stat">
+                <dt>Input tokens</dt>
+                <dd><span class="cbi-stat-value" data-field="input"></span><span class="cbi-delta" data-delta="input"></span></dd>
+            </div>
+            <div class="cbi-stat">
+                <dt>Output tokens</dt>
+                <dd><span class="cbi-stat-value" data-field="output"></span><span class="cbi-delta" data-delta="output"></span></dd>
+            </div>
+            <div class="cbi-stat">
+                <dt><i class="cbi-key" style="--key: var(--cbi-hit)"></i>Cache hit</dt>
+                <dd><span class="cbi-stat-value" data-field="hit"></span><span class="cbi-delta" data-delta="hit"></span></dd>
+            </div>
+            <div class="cbi-stat">
+                <dt><i class="cbi-key" style="--key: var(--cbi-miss)"></i>Cache miss</dt>
+                <dd><span class="cbi-stat-value" data-field="miss"></span><span class="cbi-delta" data-delta="miss"></span></dd>
+            </div>
+        </dl>
+
+        <div class="cbi-grid">
+            <section class="cbi-panel">
+                <header class="cbi-panel-head">
+                    <h4>Input tokens</h4>
+                    <span class="cbi-panel-aside" data-field="inputAside"></span>
+                </header>
+                <div class="cbi-chart" data-chart="input"></div>
+                <ul class="cbi-legend" data-legend="input"></ul>
+            </section>
+
+            <section class="cbi-panel">
+                <header class="cbi-panel-head">
+                    <h4>Output tokens</h4>
+                    <span class="cbi-panel-aside" data-field="outputAside"></span>
+                </header>
+                <div class="cbi-chart" data-chart="output"></div>
+            </section>
+
+            <section class="cbi-panel">
+                <header class="cbi-panel-head">
+                    <h4>Cache hit rate</h4>
+                    <span class="cbi-panel-aside" data-field="cacheAside"></span>
+                </header>
+                <div class="cbi-figures">
+                    <div><span class="cbi-figure" data-field="hitRate"></span><span class="cbi-figure-label">of input read from cache</span></div>
+                    <div><span class="cbi-figure" data-field="saved"></span><span class="cbi-figure-label">saved by caching, at API prices</span></div>
+                </div>
+                <div class="cbi-chart" data-chart="hitRate"></div>
+            </section>
+
+            <section class="cbi-panel">
+                <header class="cbi-panel-head">
+                    <h4>When you chat</h4>
+                    <span class="cbi-panel-aside" data-field="peak"></span>
+                </header>
+                <div class="cbi-heatmap" data-heatmap></div>
+                <div class="cbi-heat-scale" aria-hidden="true">
+                    <span>Fewer</span><i data-level="1"></i><i data-level="2"></i><i data-level="3"></i><i data-level="4"></i><span>More</span>
+                </div>
+            </section>
+
+            <section class="cbi-panel">
+                <header class="cbi-panel-head">
+                    <h4>Models</h4>
+                    <span class="cbi-panel-aside">by value</span>
+                </header>
+                <ol class="cbi-models" data-models></ol>
+            </section>
+
+            <section class="cbi-panel">
+                <header class="cbi-panel-head">
+                    <h4>Per message</h4>
+                </header>
+                <dl class="cbi-facts" data-facts></dl>
+            </section>
+
+            <section class="cbi-panel cbi-panel-wide">
+                <header class="cbi-panel-head">
+                    <h4>Per chat</h4>
+                    <div class="cbi-toggle" role="group" aria-label="Group usage by">
+                        <button type="button" data-rank="characters">Characters</button>
+                        <button type="button" data-rank="chats">Chats</button>
+                    </div>
+                </header>
+                <table class="cbi-rank">
+                    <colgroup>
+                        <col class="cbi-rank-col-name">
+                        <col class="cbi-rank-col-value">
+                        <col class="cbi-col-extra">
+                        <col class="cbi-col-extra">
+                        <col class="cbi-col-extra">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th scope="col" data-rank-heading>Character</th>
+                            <th scope="col">Value</th>
+                            <th scope="col" class="cbi-num cbi-col-extra">Messages</th>
+                            <th scope="col" class="cbi-num cbi-col-extra">Tokens</th>
+                            <th scope="col" class="cbi-num cbi-col-extra">Last active</th>
+                        </tr>
+                    </thead>
+                    <tbody data-rank-rows></tbody>
+                </table>
+                <p class="cbi-none" data-rank-more hidden></p>
+            </section>
+        </div>
+    </div>
+
+    <div class="cbi-tip" role="tooltip" hidden></div>
+</div>

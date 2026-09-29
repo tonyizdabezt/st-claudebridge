@@ -59,6 +59,12 @@ Update both together so the panel and plugin stay in sync.
 - `port` (default `7373`) and `secret` (the API key SillyTavern uses) can only be edited there.
 - Effort, thinking, thinking budget and SDK identity stripping can also be changed from the panel.
 
+## Usage Insights
+
+Open **Usage Insights** from the ClaudeBridge drawer or the wand menu. It shows messages, tokens, cache hits and misses, and what the same usage would cost on the API, broken down by day, model and chat.
+
+Stats live in `usage.jsonl` in the plugin folder, so deleting chats doesn't remove them. Costs are Claude Code's own estimates. When a stop string or the Stop button cuts a reply short, the plugin counts the received text with Anthropic's free `count_tokens` endpoint.
+
 ## Prompt cleanup
 
 Claude Code adds coding-session details to each request: your account email on the newest user message, and the working directory, OS, shell, model identity and date in a `system`-role message. None of that helps a roleplay chat, and it takes up context.
