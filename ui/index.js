@@ -8,10 +8,7 @@ const SECRET_LABEL = 'ClaudeBridge plugin';
 const PROXY_PRESET = 'ClaudeBridge';
 const TEMPLATE_PATH = new URL('.', import.meta.url).pathname.replace(/^.*\/scripts\/extensions\//, '').replace(/\/$/, '');
 
-/**
- * @param {string} path
- * @param {RequestInit} [init]
- */
+/** @param {RequestInit} [init] */
 async function api(path, init = {}) {
     const response = await fetch(`${API}${path}`, { ...init, headers: getRequestHeaders() });
     if (!response.ok) {
@@ -22,10 +19,7 @@ async function api(path, init = {}) {
     return response.json();
 }
 
-/**
- * @param {string} label
- * @param {{ utilization: number | null, resets_at: string | null } | null} window
- */
+/** @param {{ utilization: number | null, resets_at: string | null } | null} window */
 function quotaRow(label, window) {
     if (!window || window.utilization == null) return null;
     const pct = Math.max(0, Math.min(100, window.utilization));
@@ -69,7 +63,6 @@ async function refreshStatus(force = false) {
     }
 }
 
-/** @param {any} config */
 function renderConfig(config) {
     $('#claude_bridge_effort').val(config.effort);
     $('#claude_bridge_thinking').val(config.thinking);
