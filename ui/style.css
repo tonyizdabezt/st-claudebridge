@@ -20,6 +20,33 @@
     word-break: break-word;
 }
 
+.claude-bridge-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 4px;
+    padding-top: 10px;
+    border-top: 1px solid var(--SmartThemeBorderColor, rgba(0, 0, 0, 0.5));
+}
+
+.claude-bridge-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 10px;
+}
+
+.claude-bridge-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+#claude_bridge_quota {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
 .claude-bridge-connect-row {
     display: flex;
     flex-wrap: wrap;

@@ -24,7 +24,7 @@ async function api(path, init = {}) {
 function quotaRow(label, window) {
     if (!window || window.utilization == null) return null;
     const pct = Math.max(0, Math.min(100, window.utilization));
-    const resets = window.resets_at ? `, resets ${new Date(window.resets_at).toLocaleString()}` : '';
+    const resets = window.resets_at ? `, resets ${new Date(window.resets_at).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}` : '';
     const row = $('<div class="claude-bridge-quota-row"></div>');
     row.append($('<span></span>').text(`${label}: ${Math.round(pct)}% used${resets}`));
     row.append($('<div class="claude-bridge-quota-bar"><div></div></div>').find('div').css('width', `${pct}%`).end());
@@ -57,7 +57,8 @@ async function refreshStatus(force = false) {
             status.addClass('error').text(`Not logged in. Run "${s.cliPath}" in a terminal and use /login.`);
         } else {
             status.addClass('ok').text(`Logged in: ${s.subscription} · Claude Code ${s.cliVersion}`);
-            quota.append(quotaRow('5-hour window', s.quota?.fiveHour), quotaRow('Weekly', s.quota?.sevenDay));
+            const rows = [quotaRow('5-hour window', s.quota?.fiveHour), quotaRow('Weekly', s.quota?.sevenDay)].filter(Boolean);
+            if (rows.length) quota.append(...rows, $('<small class="claude-bridge-notice"></small>').text('Limits are shared with Claude Code, Claude.ai chat and Claude Cowork.'));
         }
     } catch (error) {
         status.addClass('error').text(error.message);

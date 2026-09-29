@@ -6,67 +6,66 @@
         </div>
         <div class="inline-drawer-content">
             <div class="claude-bridge-body">
-            <div class="claude-bridge-status-row">
-                <span id="claude_bridge_status">Checking…</span>
-                <i id="claude_bridge_refresh" class="menu_button fa-solid fa-arrows-rotate fa-fw" title="Refresh status"></i>
-            </div>
-            <div id="claude_bridge_quota"></div>
-            <div id="claude_bridge_insights" class="menu_button menu_button_icon" title="Messages, tokens, cache hits and API-equivalent value over time">
-                <i class="fa-solid fa-chart-simple"></i>
-                <span>Usage Insights</span>
-            </div>
-
-            <div class="claude-bridge-connect-row">
-                <div id="claude_bridge_connect_claude" class="menu_button menu_button_icon" title="Claude source + reverse proxy preset. Uses SillyTavern's own Claude settings (model list, thinking, effort).">
-                    <i class="fa-solid fa-plug"></i>
-                    <span>Connect (Claude)</span>
+                <div class="claude-bridge-status-row">
+                    <span id="claude_bridge_status">Checking…</span>
+                    <i id="claude_bridge_refresh" class="menu_button fa-solid fa-arrows-rotate fa-fw" title="Refresh status"></i>
                 </div>
-                <div id="claude_bridge_connect_custom" class="menu_button menu_button_icon" title="Custom (OpenAI-compatible) source. Live model list from Claude Code, including 1M-context variants; uses the settings below.">
-                    <i class="fa-solid fa-plug-circle-plus"></i>
-                    <span>Connect (Custom)</span>
+                <div id="claude_bridge_quota"></div>
+                <div id="claude_bridge_insights" class="menu_button menu_button_icon">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <span>Usage Insights</span>
                 </div>
-            </div>
-            <small class="claude-bridge-notice">
-                Claude source: pick any model in the Claude list; requests use the standard context window.
-                For 1M-context Opus 4.6 / Sonnet 4.6, use Custom.
-                The Claude source keeps the "ClaudeBridge" proxy preset. You might need to switch it to "None" when switching to another API.
-            </small>
-            <small class="claude-bridge-notice">Settings below apply to Custom. Claude source requests use SillyTavern's own reasoning settings; these fill in anything it doesn't send.</small>
 
-            <label for="claude_bridge_effort">Reasoning effort</label>
-            <select id="claude_bridge_effort" class="text_pole">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="xhigh">Extra high</option>
-                <option value="max">Max</option>
-            </select>
+                <div class="claude-bridge-section">
+                    <div class="claude-bridge-connect-row">
+                        <div id="claude_bridge_connect_claude" class="menu_button menu_button_icon">
+                            <i class="fa-solid fa-plug"></i>
+                            <span>Connect via Claude</span>
+                        </div>
+                        <div id="claude_bridge_connect_custom" class="menu_button menu_button_icon">
+                            <i class="fa-solid fa-plug-circle-plus"></i>
+                            <span>Connect via Custom</span>
+                        </div>
+                    </div>
+                    <small class="claude-bridge-notice">Claude uses SillyTavern's Claude settings. Custom adds 1M-context models and uses the settings below.</small>
+                    <small class="claude-bridge-notice">Switching to another API later? Set the Claude reverse proxy back to None.</small>
+                </div>
 
-            <label for="claude_bridge_thinking">Thinking</label>
-            <select id="claude_bridge_thinking" class="text_pole">
-                <option value="adaptive">Adaptive (model decides)</option>
-                <option value="enabled">Always, fixed budget</option>
-                <option value="disabled">Off</option>
-            </select>
+                <div class="claude-bridge-section">
+                    <b>Custom source</b>
+                    <div class="claude-bridge-fields">
+                        <label for="claude_bridge_effort">
+                            Reasoning effort
+                            <select id="claude_bridge_effort" class="text_pole">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="xhigh">Extra high</option>
+                                <option value="max">Max</option>
+                            </select>
+                        </label>
+                        <label for="claude_bridge_thinking">
+                            Thinking
+                            <select id="claude_bridge_thinking" class="text_pole">
+                                <option value="adaptive">Adaptive</option>
+                                <option value="enabled">Fixed budget</option>
+                                <option value="disabled">Off</option>
+                            </select>
+                        </label>
+                        <label id="claude_bridge_budget_row" for="claude_bridge_budget">
+                            Thinking budget (tokens)
+                            <input id="claude_bridge_budget" class="text_pole" type="number" min="1024" max="64000" step="256">
+                        </label>
+                    </div>
+                </div>
 
-            <div id="claude_bridge_budget_row">
-                <label for="claude_bridge_budget">Thinking budget</label>
-                <input id="claude_bridge_budget" class="text_pole" type="number" min="1024" max="64000" step="256">
-            </div>
-
-            <label class="checkbox_label" for="claude_bridge_strip_sdk_identity">
-                <input id="claude_bridge_strip_sdk_identity" type="checkbox">
-                <span>Remove the Agent SDK identity line</span>
-            </label>
-            <small class="claude-bridge-notice">
-                Removes the short intro line the Agent SDK adds to the top of the system prompt.
-                Usage still comes out of your plan. If requests start failing, turn this off.
-            </small>
-
-            <small class="claude-bridge-notice">
-                Uses your own Claude Code login (<code>claude /login</code>); usage counts against your plan usage limits,
-                shared with Claude Code and claude.ai.
-            </small>
+                <div class="claude-bridge-section">
+                    <label class="checkbox_label" for="claude_bridge_strip_sdk_identity">
+                        <input id="claude_bridge_strip_sdk_identity" type="checkbox">
+                        <span>Remove the Agent SDK identity line</span>
+                    </label>
+                    <small class="claude-bridge-notice">Applies to both sources. Turn it off if requests start failing.</small>
+                </div>
             </div>
         </div>
     </div>
