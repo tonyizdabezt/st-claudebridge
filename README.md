@@ -79,7 +79,7 @@ The Agent SDK also opens the system prompt with `You are a Claude agent, built o
 - Prefill isn't supported: a request that ends with an assistant message gets a 400 error.
 - Stop strings are emulated on the output stream.
 - Tools, forced tool choice, structured JSON output and embeddings aren't supported.
-- Usage counts against your plan limits, which are shared with Claude Code and claude.ai.
+- Usage counts against your plan limits, which are shared with Claude Code, Claude.ai chat and Claude Cowork.
 
 ## License
 
