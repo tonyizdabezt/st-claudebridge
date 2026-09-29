@@ -62,8 +62,6 @@ function renderConfig(config) {
     $('#claude_bridge_thinking').val(config.thinking);
     $('#claude_bridge_budget').val(config.thinkingBudget);
     $('#claude_bridge_budget_row').toggle(config.thinking === 'enabled');
-    $('#claude_bridge_show_reasoning').prop('checked', config.showReasoning);
-    $('#claude_bridge_resume').prop('checked', config.resume);
     $('#claude_bridge_strip_sdk_identity').prop('checked', config.stripSdkIdentity);
 }
 
@@ -74,8 +72,6 @@ async function saveConfig() {
             effort: $('#claude_bridge_effort').val(),
             thinking: $('#claude_bridge_thinking').val(),
             thinkingBudget: Number($('#claude_bridge_budget').val()),
-            showReasoning: $('#claude_bridge_show_reasoning').prop('checked'),
-            resume: $('#claude_bridge_resume').prop('checked'),
             stripSdkIdentity: $('#claude_bridge_strip_sdk_identity').prop('checked'),
         }),
     });
@@ -123,7 +119,7 @@ jQuery(async () => {
     $('#claude_bridge_refresh').on('click', () => refreshStatus(true));
     $('#claude_bridge_connect_claude').on('click', connectClaude);
     $('#claude_bridge_connect_custom').on('click', connectCustom);
-    $('#claude_bridge_effort, #claude_bridge_thinking, #claude_bridge_budget, #claude_bridge_show_reasoning, #claude_bridge_resume, #claude_bridge_strip_sdk_identity')
+    $('#claude_bridge_effort, #claude_bridge_thinking, #claude_bridge_budget, #claude_bridge_strip_sdk_identity')
         .on('change', () => saveConfig().catch(error => toastr.error(error.message, 'ClaudeBridge')));
 
     try {

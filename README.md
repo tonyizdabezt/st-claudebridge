@@ -57,7 +57,7 @@ Update both together so the panel and plugin stay in sync.
 `config.json` is created in the plugin folder on first run and is gitignored.
 
 - `port` (default `7373`) and `secret` (the API key SillyTavern uses) can only be edited there.
-- Effort, thinking, thinking budget, reasoning display, history mode and SDK identity stripping can also be changed from the panel.
+- Effort, thinking, thinking budget and SDK identity stripping can also be changed from the panel.
 
 ## Prompt cleanup
 
