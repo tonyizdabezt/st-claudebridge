@@ -5,6 +5,7 @@ import { ConfigStore } from './lib/config.js';
 import { createServer } from './lib/server.js';
 import { probe, sdkVersions, bundledCliPath } from './lib/sdk.js';
 import { startUpstreamProxy } from './lib/upstream.js';
+import { sweepResumeDirs } from './lib/session.js';
 
 const HOST = '127.0.0.1';
 const pluginDir = path.dirname(fileURLToPath(import.meta.url));
@@ -30,6 +31,7 @@ export const info = {
  */
 export async function init(router) {
     fs.mkdirSync(cwd, { recursive: true });
+    await sweepResumeDirs(cwd);
     config = new ConfigStore(path.join(pluginDir, 'config.json'));
     upstream = await startUpstreamProxy(() => config.data);
 
@@ -70,4 +72,5 @@ export async function exit() {
         await new Promise(resolve => upstream.close(() => resolve(undefined)));
         upstream = null;
     }
+    await sweepResumeDirs(cwd);
 }
