@@ -6,6 +6,7 @@ import { createServer } from './lib/server.js';
 import { probe, sdkVersions, bundledCliPath } from './lib/sdk.js';
 import { startUpstreamProxy } from './lib/upstream.js';
 import { sweepResumeDirs } from './lib/session.js';
+import { recentNotices } from './lib/notices.js';
 
 const HOST = '127.0.0.1';
 const pluginDir = path.dirname(fileURLToPath(import.meta.url));
@@ -51,6 +52,10 @@ export async function init(router) {
         } catch (error) {
             res.json({ ok: false, ...base, error: error.message });
         }
+    });
+
+    router.get('/notices', (_req, res) => {
+        res.json(recentNotices());
     });
 
     router.get('/config', (_req, res) => {

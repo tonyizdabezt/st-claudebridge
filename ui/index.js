@@ -1,5 +1,6 @@
 import { renderExtensionTemplateAsync } from '../../../../extensions.js';
 import { getRequestHeaders } from '../../../../../script.js';
+import { eventSource, event_types } from '../../../../events.js';
 import { SECRET_KEYS, secret_state, writeSecret, deleteSecret, readSecretState } from '../../../../secrets.js';
 
 const API = '/api/plugins/claude-bridge';
@@ -33,6 +34,18 @@ function quotaRow(label, window) {
     row.append($('<span></span>').text(`${label}: ${Math.round(pct)}% used${resets}`));
     row.append($('<div class="claude-bridge-quota-bar"><div></div></div>').find('div').css('width', `${pct}%`).end());
     return row;
+}
+
+let lastNoticeId = null;
+
+async function showNotices() {
+    const { lastId, notices } = await api('/notices');
+    if (lastNoticeId !== null) {
+        // a lower id means the plugin restarted and its counter reset.
+        const since = lastId < lastNoticeId ? 0 : lastNoticeId;
+        for (const notice of notices.filter(n => n.id > since)) toastr.warning(notice.message, 'ClaudeBridge');
+    }
+    lastNoticeId = lastId;
 }
 
 async function refreshStatus(force = false) {
@@ -124,7 +137,9 @@ jQuery(async () => {
 
     try {
         renderConfig(await api('/config'));
+        await showNotices();
     } catch {
     }
+    eventSource.on(event_types.GENERATION_ENDED, () => showNotices().catch(() => {}));
     await refreshStatus();
 });
