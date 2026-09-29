@@ -56,9 +56,9 @@ Update both together so the panel and plugin stay in sync.
 
 ## Host metadata stripping
 
-Claude Code adds `<system-reminder>` blocks to the newest user message: your account email, the working directory, OS and shell, the model's identity and today's date.
+Claude Code adds your account email to the newest user message, and the working directory, OS and shell, the model's identity and today's date as a `system`-role message.
 
-The plugin points the CLI (via `ANTHROPIC_BASE_URL`) at a local proxy on a random `127.0.0.1` port. The proxy drops those blocks from `POST /v1/messages` bodies and forwards everything else unchanged to `api.anthropic.com`, including headers, auth and the system prompt.
+The plugin points the CLI (via `ANTHROPIC_BASE_URL`) at a local proxy on a random `127.0.0.1` port. The proxy drops those from `POST /v1/messages` bodies and forwards everything else unchanged to `api.anthropic.com`, including headers, auth and the system prompt.
 
 ## Limitations
 
