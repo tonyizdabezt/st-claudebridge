@@ -327,8 +327,9 @@ class Insights {
         });
         const every = Math.max(1, Math.ceil(n / Math.max(2, Math.floor(pw / 64))));
         for (let i = n - 1; i >= 0; i -= every) {
-            svg('text', { x: x(i), y: o.height - 6, class: 'cbi-tick', 'text-anchor': i === n - 1 && n > 1 ? 'end' : 'middle' }, root)
-                .textContent = bucketLabel(buckets[i].t, o.unit);
+            const text = bucketLabel(buckets[i].t, o.unit);
+            const cx = Math.min(x(i), width - (text.length * 6.4) / 2 - 2);
+            svg('text', { x: cx, y: o.height - 6, class: 'cbi-tick', 'text-anchor': 'middle' }, root).textContent = text;
         }
 
         const focus = svg('rect', { x: 0, y: pad.top, width: band, height: ph, class: 'cbi-focus-band', visibility: 'hidden' }, root);
