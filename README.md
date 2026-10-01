@@ -57,7 +57,8 @@ Update both together so the panel and plugin stay in sync.
 `config.json` is created in the plugin folder on first run and is gitignored.
 
 - `port` (default `7373`) and `secret` (the API key SillyTavern uses) can only be edited there.
-- Effort, thinking, thinking budget and SDK identity stripping can also be changed from the panel.
+- `idleTimeoutSeconds` (default `300`) can only be edited there. If Claude Code sends nothing for that long, the request stops with a 504 error. `0` turns this off.
+- Effort, thinking, thinking budget, SDK identity stripping and model swaps can also be changed from the panel.
 
 ## Usage Insights
 
@@ -72,6 +73,12 @@ Claude Code adds coding-session details to each request: your account email on t
 The plugin points the CLI (via `ANTHROPIC_BASE_URL`) at a local proxy on a random `127.0.0.1` port. The proxy removes those details from `POST /v1/messages` bodies and forwards the rest to `api.anthropic.com` as is, including headers, auth and the system prompt.
 
 The Agent SDK also opens the system prompt with `You are a Claude agent, built on Anthropic's Claude Agent SDK.` The proxy leaves that line in by default. You can remove it with `stripSdkIdentity` (**Remove the Agent SDK identity line** in the panel). This is optional and Anthropic may reject requests that lack the line.
+
+## Model swaps
+
+Claude Code sometimes answers with a model other than the one you picked: when your model isn't available on your plan, or when its safeguards refuse a message and Claude Code retries on a fallback model. By default the plugin lets the reply through and logs a warning in the console.
+
+Turn on `refuseModelSwap` (**Stop the reply if another model answers** in the panel) to stop those replies instead. The request then fails with a 409 error before any text from the other model is sent.
 
 ## Limitations
 
