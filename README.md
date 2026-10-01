@@ -36,7 +36,7 @@ The same repo is installed twice, once in each role:
 
 4. Restart SillyTavern. The console should print `[claude-bridge] Listening on http://127.0.0.1:7373/v1`.
 5. Open the **ClaudeBridge** drawer in the Extensions panel. If it says "Not logged in", run the CLI path it shows and use `/login`.
-6. Click **Connect (Claude)** or **Connect (Custom)**, then pick a model.
+6. Click **Connect via Custom** or **Connect via Claude**, then pick a model. Custom keeps more of your prompt's structure; see [Recommended setup](#recommended-setup).
 
 ## Updating
 
@@ -51,6 +51,44 @@ The same repo is installed twice, once in each role:
 - **UI panel:** update it from **Extensions → Manage extensions**.
 
 Update both together so the panel and plugin stay in sync.
+
+## Recommended setup
+
+Connect through SillyTavern's Custom source so your prompt reaches Claude in the shape you built it:
+
+1. In the ClaudeBridge drawer, click **Connect via Custom**.
+2. In the API Connections panel, set **Prompt Post-Processing** to **None**.
+3. Pick a model that takes mid-chat system messages: `claude-opus-5-5`, `claude-opus-5`, `claude-opus-4-8`, `claude-fable-5-1`, `claude-fable-5` or `sonnet` (Sonnet 5.5).
+
+The model list shows the same models as SillyTavern's Claude source, followed by Claude Code's own entries such as `opus` and `sonnet`.
+
+### What the Custom source keeps
+
+With this setup, ClaudeBridge sends your prompt with its structure intact:
+
+- **System prompt**: each system message at the top of your prompt becomes its own system block. Turn on **Squash system messages** in SillyTavern if you want them combined into one.
+- **System messages inside the chat**: Author's Notes, lorebook entries at a depth and post-history instructions reach the model as real `system` messages, which Claude treats as instructions from the app rather than from the user.
+- **Group chats**: replies from different characters in a row stay separate messages.
+- **Chat start**: the chat can open with the character's greeting. No placeholder message is added before it.
+
+On models without mid-chat system message support, those messages go to the model as user text, the way they always have.
+
+### Where a system message can go in the chat
+
+Claude accepts a system message inside the chat only right after a user message, and only when an assistant message follows it or it's the last message. On the models listed above, ClaudeBridge rejects any other spot with a 400 error that names the message, so you can move it. It doesn't reorder your prompt for you.
+
+In practice, depth 0 (after your last message) always works. Depth 1 puts the message between the character's last reply and your message, so it fails. Deeper positions work when they land right after one of your messages.
+
+### Why not the Claude source
+
+SillyTavern's Claude source converts the prompt to Anthropic's format before ClaudeBridge sees it. That step turns every system message inside the chat into a user message and merges it with your message. No setting turns it off, so ClaudeBridge can't tell which text started as a system message.
+
+If your prompt has no system messages inside the chat, the Claude source loses little. Compared with Custom:
+
+- **Kept**: each system message at the top still becomes its own system block, as long as **Use system prompt** is on. The chat can open with the greeting.
+- **Lost**: Author's Notes, lorebook entries at a depth and post-history instructions reach the model as part of your message, not as system messages.
+- **Changed**: replies from different characters in a row arrive as one assistant message, with each reply still in its own text block.
+- **Better**: example dialogue shows your user and character names. On Custom, example messages have no name in front.
 
 ## Configuration
 
