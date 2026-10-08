@@ -58,7 +58,7 @@ Connect through SillyTavern's Custom source so your prompt reaches Claude in the
 
 1. In the ClaudeBridge drawer, click **Connect via Custom**.
 2. In the API Connections panel, set **Prompt Post-Processing** to **None**.
-3. Pick a model that takes mid-chat system messages: `claude-opus-5-5`, `claude-opus-5`, `claude-opus-4-8`, `claude-fable-5-1`, `claude-fable-5` or `sonnet` (Sonnet 5.5).
+3. Pick a model that takes mid-chat system messages: `claude-opus-5-5`, `claude-opus-5`, `claude-opus-4-8`, `claude-fable-5-1`, `claude-fable-5`, `sonnet` (Sonnet 5.5) or `haiku` (Haiku 5.5).
 
 The model list shows the same models as SillyTavern's Claude source, followed by Claude Code's own entries such as `opus` and `sonnet`.
 
