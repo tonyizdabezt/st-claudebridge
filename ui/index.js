@@ -31,6 +31,17 @@ function quotaRow(label, window) {
     return row;
 }
 
+/** @param {any} q Quota from the plugin */
+function renderQuota(q) {
+    const rows = [
+        quotaRow('5-hour window', q?.fiveHour),
+        quotaRow('Weekly', q?.sevenDay),
+        ...(q?.modelScoped ?? []).map(w => quotaRow(`Weekly · ${w.display_name}`, w)),
+    ].filter(Boolean);
+    const quota = $('#claude_bridge_quota').empty();
+    if (rows.length) quota.append(...rows, $('<small class="claude-bridge-notice"></small>').text('Limits are shared with Claude Code, Claude.ai chat and Claude Cowork.'));
+}
+
 let lastNoticeId = null;
 
 async function showNotices() {
@@ -45,7 +56,7 @@ async function showNotices() {
 
 async function refreshStatus(force = false) {
     const status = $('#claude_bridge_status');
-    const quota = $('#claude_bridge_quota').empty();
+    $('#claude_bridge_quota').empty();
     status.removeClass('ok error').text('Checking…');
     try {
         const s = await api(`/status${force ? '?refresh=1' : ''}`);
@@ -57,8 +68,7 @@ async function refreshStatus(force = false) {
             status.addClass('error').text(`Not logged in. Run "${s.cliPath}" in a terminal and use /login.`);
         } else {
             status.addClass('ok').text(`Logged in: ${s.subscription} · Claude Code ${s.cliVersion}`);
-            const rows = [quotaRow('5-hour window', s.quota?.fiveHour), quotaRow('Weekly', s.quota?.sevenDay)].filter(Boolean);
-            if (rows.length) quota.append(...rows, $('<small class="claude-bridge-notice"></small>').text('Limits are shared with Claude Code, Claude.ai chat and Claude Cowork.'));
+            renderQuota(s.quota);
         }
     } catch (error) {
         status.addClass('error').text(error.message);
@@ -165,7 +175,10 @@ jQuery(async () => {
         await showNotices();
     } catch {
     }
-    eventSource.on(event_types.GENERATION_ENDED, () => showNotices().catch(() => {}));
+    eventSource.on(event_types.GENERATION_ENDED, () => {
+        showNotices().catch(() => {});
+        api('/quota').then(renderQuota).catch(() => {});
+    });
     eventSource.on(event_types.CHAT_COMPLETION_SETTINGS_READY, tagGeneration);
     await refreshStatus();
 });

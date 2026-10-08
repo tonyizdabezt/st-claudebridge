@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ConfigStore } from './lib/config.js';
 import { createServer } from './lib/server.js';
-import { probe, sdkVersions, bundledCliPath } from './lib/sdk.js';
+import { probe, sdkVersions, bundledCliPath, cachedQuota } from './lib/sdk.js';
 import { startUpstreamProxy, countTokens } from './lib/upstream.js';
 import { sweepResumeDirs } from './lib/session.js';
 import { recentNotices } from './lib/notices.js';
@@ -56,6 +56,10 @@ export async function init(router) {
         } catch (error) {
             res.json({ ok: false, ...base, error: error.message });
         }
+    });
+
+    router.get('/quota', (_req, res) => {
+        res.json(cachedQuota());
     });
 
     router.get('/notices', (_req, res) => {
