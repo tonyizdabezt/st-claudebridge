@@ -62,6 +62,8 @@ async function refreshStatus(force = false) {
         const s = await api(`/status${force ? '?refresh=1' : ''}`);
         if (!s.ok) {
             status.addClass('error').text(`Claude Code error: ${s.error}`);
+        } else if (apiKeyActive) {
+            status.addClass('ok').text(`Using Anthropic API key · Claude Code ${s.cliVersion}`);
         } else if (s.usingApiKey || s.apiProvider !== 'firstParty') {
             status.addClass('error').text(`Claude Code is using ${s.apiProvider ?? 'an API key'}, not a subscription login.`);
         } else if (!s.loggedIn) {
@@ -76,15 +78,21 @@ async function refreshStatus(force = false) {
 }
 
 let endpoint = null;
+let apiKeyActive = false;
 const trimSlash = url => String(url ?? '').replace(/\/+$/, '');
 
 function renderConfig(config) {
     if (config.endpoint) endpoint = trimSlash(config.endpoint);
+    apiKeyActive = config.apiKeyEnabled && config.apiKeySaved;
     $('#claude_bridge_effort').val(config.effort);
     $('#claude_bridge_thinking').val(config.thinking);
     $('#claude_bridge_budget').val(config.thinkingBudget);
     $('#claude_bridge_budget_row').toggle(config.thinking === 'enabled');
+    $('#claude_bridge_cache_enabled').prop('checked', config.cacheEnabled);
+    $('#claude_bridge_cache_ttl_row').toggle(config.cacheEnabled);
     $('#claude_bridge_cache_ttl').val(config.cacheTtl);
+    $('#claude_bridge_api_key_enabled').prop('checked', config.apiKeyEnabled);
+    $('#claude_bridge_api_key').toggle(config.apiKeyEnabled).attr('placeholder', config.apiKeySaved ? 'Key saved' : 'sk-ant-…');
     $('#claude_bridge_strip_sdk_identity').prop('checked', config.stripSdkIdentity);
     $('#claude_bridge_refuse_model_swap').prop('checked', config.refuseModelSwap);
 }
@@ -96,12 +104,17 @@ async function saveConfig() {
             effort: $('#claude_bridge_effort').val(),
             thinking: $('#claude_bridge_thinking').val(),
             thinkingBudget: Number($('#claude_bridge_budget').val()),
+            cacheEnabled: $('#claude_bridge_cache_enabled').prop('checked'),
             cacheTtl: $('#claude_bridge_cache_ttl').val(),
+            apiKeyEnabled: $('#claude_bridge_api_key_enabled').prop('checked'),
+            apiKey: $('#claude_bridge_api_key').val(),
             stripSdkIdentity: $('#claude_bridge_strip_sdk_identity').prop('checked'),
             refuseModelSwap: $('#claude_bridge_refuse_model_swap').prop('checked'),
         }),
     });
+    const wasActive = apiKeyActive;
     renderConfig(config);
+    if (apiKeyActive !== wasActive) await refreshStatus();
 }
 
 async function connectClaude() {
@@ -167,7 +180,7 @@ jQuery(async () => {
     $('#claude_bridge_refresh').on('click', () => refreshStatus(true));
     $('#claude_bridge_connect_claude').on('click', connectClaude);
     $('#claude_bridge_connect_custom').on('click', connectCustom);
-    $('#claude_bridge_effort, #claude_bridge_thinking, #claude_bridge_budget, #claude_bridge_cache_ttl, #claude_bridge_strip_sdk_identity, #claude_bridge_refuse_model_swap')
+    $('#claude_bridge_effort, #claude_bridge_thinking, #claude_bridge_budget, #claude_bridge_cache_enabled, #claude_bridge_cache_ttl, #claude_bridge_api_key_enabled, #claude_bridge_api_key, #claude_bridge_strip_sdk_identity, #claude_bridge_refuse_model_swap')
         .on('change', () => saveConfig().catch(error => toastr.error(error.message, 'ClaudeBridge')));
 
     try {
@@ -177,7 +190,7 @@ jQuery(async () => {
     }
     eventSource.on(event_types.GENERATION_ENDED, () => {
         showNotices().catch(() => {});
-        api('/quota').then(renderQuota).catch(() => {});
+        if (!apiKeyActive) api('/quota').then(renderQuota).catch(() => {});
     });
     eventSource.on(event_types.CHAT_COMPLETION_SETTINGS_READY, tagGeneration);
     await refreshStatus();

@@ -75,12 +75,15 @@ export async function init(router) {
         res.json({ ok: true });
     });
 
+    // The API key never leaves the server, like SillyTavern's secrets.
+    const publicConfig = ({ apiKey, ...rest }) => ({ ...rest, apiKeySaved: Boolean(apiKey), endpoint: `http://${HOST}:${config.data.port}/v1` });
+
     router.get('/config', (_req, res) => {
-        res.json({ ...config.data, endpoint: `http://${HOST}:${config.data.port}/v1` });
+        res.json(publicConfig(config.data));
     });
 
     router.post('/config', (req, res) => {
-        res.json(config.update(req.body));
+        res.json(publicConfig(config.update(req.body)));
     });
 }
 

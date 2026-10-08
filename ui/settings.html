@@ -32,6 +32,15 @@
                 </div>
 
                 <div class="claude-bridge-section">
+                    <label class="checkbox_label" for="claude_bridge_api_key_enabled">
+                        <input id="claude_bridge_api_key_enabled" type="checkbox">
+                        <span>Use an Anthropic API key</span>
+                    </label>
+                    <input id="claude_bridge_api_key" class="text_pole" type="password" autocomplete="off" spellcheck="false">
+                    <small class="claude-bridge-notice">Replies are billed to the key instead of your plan limits.</small>
+                </div>
+
+                <div class="claude-bridge-section">
                     <b>Custom source</b>
                     <div class="claude-bridge-fields">
                         <label for="claude_bridge_effort">
@@ -60,7 +69,11 @@
                 </div>
 
                 <div class="claude-bridge-section">
-                    <div class="claude-bridge-fields">
+                    <label class="checkbox_label" for="claude_bridge_cache_enabled">
+                        <input id="claude_bridge_cache_enabled" type="checkbox">
+                        <span>Prompt caching</span>
+                    </label>
+                    <div id="claude_bridge_cache_ttl_row" class="claude-bridge-fields">
                         <label for="claude_bridge_cache_ttl">
                             Prompt cache lifetime
                             <select id="claude_bridge_cache_ttl" class="text_pole">
@@ -77,7 +90,7 @@
                         <input id="claude_bridge_strip_sdk_identity" type="checkbox">
                         <span>Remove the Agent SDK identity line</span>
                     </label>
-                    <small class="claude-bridge-notice">Applies to both sources. Turn it off if requests start failing.</small>
+                    <small class="claude-bridge-notice">Turn it off if requests start failing.</small>
                 </div>
 
                 <div class="claude-bridge-section">
@@ -85,7 +98,7 @@
                         <input id="claude_bridge_refuse_model_swap" type="checkbox">
                         <span>Stop the reply if another model answers</span>
                     </label>
-                    <small class="claude-bridge-notice">Applies to both sources. Claude Code can switch models when yours is unavailable or its safeguards refuse a message.</small>
+                    <small class="claude-bridge-notice">Claude Code can switch models when yours is unavailable or its safeguards refuse a message.</small>
                 </div>
             </div>
         </div>
