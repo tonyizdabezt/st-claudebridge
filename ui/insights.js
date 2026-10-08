@@ -245,7 +245,9 @@ class Insights {
         this.set('outputAside', replies ? `${tokens(t.out / replies)} per message` : '');
         const rate = hitRateOf(t);
         this.set('hitRate', rate == null ? 'No data' : fmt.pct.format(rate));
-        this.set('saved', money(t.saved));
+        this.set('saved', money(Math.abs(t.saved)));
+        this.set('savedLabel', t.saved < 0 ? 'lost to cache writes' : 'saved by caching');
+        this.set('cacheBreakdown', `${money(t.readSaved)} saved on reads · ${money(t.writeCost)} extra on writes`);
         this.set('cacheAside', `${tokens(t.cw)} written`);
 
         this.renderHeatmap();
