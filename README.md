@@ -96,7 +96,8 @@ If your prompt has no system messages inside the chat, the Claude source loses l
 
 - `port` (default `7373`) and `secret` (the API key SillyTavern uses) can only be edited there.
 - `idleTimeoutSeconds` (default `300`) can only be edited there. If Claude Code sends nothing for that long, the request stops with a 504 error. `0` turns this off.
-- Effort, thinking, thinking budget, SDK identity stripping and model swaps can also be changed from the panel.
+- Effort, thinking, thinking budget, prompt cache lifetime, SDK identity stripping and model swaps can also be changed from the panel.
+- `cacheTtl` (default `auto`) sets the prompt cache lifetime: `5m`, `1h`, or `auto` to let Claude Code choose. 1-hour cache writes cost 2× input instead of 1.25×, but the cache survives pauses longer than 5 minutes.
 
 ## Usage Insights
 

@@ -60,6 +60,19 @@
                 </div>
 
                 <div class="claude-bridge-section">
+                    <div class="claude-bridge-fields">
+                        <label for="claude_bridge_cache_ttl">
+                            Prompt cache lifetime
+                            <select id="claude_bridge_cache_ttl" class="text_pole">
+                                <option value="auto">Auto</option>
+                                <option value="5m">5 minutes</option>
+                                <option value="1h">1 hour</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="claude-bridge-section">
                     <label class="checkbox_label" for="claude_bridge_strip_sdk_identity">
                         <input id="claude_bridge_strip_sdk_identity" type="checkbox">
                         <span>Remove the Agent SDK identity line</span>
